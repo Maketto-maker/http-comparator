@@ -70,6 +70,8 @@ npm install tough-cookie
 - `--referer-a/--referer-b`: Set Referer headers (affects Sec-Fetch-Site calculation)
 - `--full-diff`: Show complete diffs instead of truncated output
 - `--insecure`: Allow insecure TLS connections
+- `--follow-token-refresh`: Follow OAuth2 token refresh redirects automatically
+- `--login-check`: Check login status and detect authentication requirements
 
 ## Code Patterns and Conventions
 
@@ -79,6 +81,11 @@ npm install tough-cookie
 - HTTP/2 support with connection reuse
 - Optional tough-cookie jar for complex cookie scenarios
 - Graceful fallback when tough-cookie is not installed
+- **OAuth2 Token Refresh Support**: Automatically follows OAuth2/OIDC redirect chains when `--follow-token-refresh` is enabled
+  - Detects authorization redirects (URLs with `/authorize`, `response_type`, `client_id`, `redirect_uri`)
+  - Handles callback redirects (URLs with `/auth_callback` and `code` parameter)
+  - Maintains proper Sec-Fetch-Site headers across domain boundaries
+  - Preserves cookies throughout the authentication flow
 
 ### HTML Processing
 - Uses Cheerio for server-side DOM manipulation
@@ -92,6 +99,14 @@ npm install tough-cookie
 - Reduces noise from markup differences
 - Unified diff output for failures
 - Pass/fail based on exact text content match
+
+### Authentication Detection
+- **Login Status Checking**: `--login-check` mode tests authentication status
+- Detects "Internal Server Error" responses
+- Identifies common login requirement patterns:
+  - "log in to market observer to continue to market observer"
+  - "please log in", "login required", "authentication required"
+- Reports failures as "FAIL (Require login)" vs "FAIL (Internal Server Error)"
 
 ## Error Handling
 

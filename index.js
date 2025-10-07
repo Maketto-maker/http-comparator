@@ -36,6 +36,22 @@ function parseCookiesText(text) {
   return { cookieA, cookieB };
 }
 
+function parseCredentials(text) {
+  const lines = String(text).split(/\r?\n/).map(l => l.trim());
+  const line1 = lines[0] || '';
+  const line2 = lines[1] || '';
+
+  // Parse line 1 (URL A credentials)
+  const parts1 = line1.split(/\s+/);
+  const credentialsA = parts1.length >= 2 ? { username: parts1[0], password: parts1.slice(1).join(' ') } : null;
+
+  // Parse line 2 (URL B credentials), fallback to A if empty
+  const parts2 = line2.split(/\s+/);
+  const credentialsB = parts2.length >= 2 ? { username: parts2[0], password: parts2.slice(1).join(' ') } : credentialsA;
+
+  return { A: credentialsA, B: credentialsB };
+}
+
 function parseUrlPairs(text) {
   const lines = text.split(/\r?\n/);
   const pairs = [];
@@ -73,13 +89,15 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     .option('referer', { type: 'string', describe: 'Referer to send with both A and B requests' })
     .option('referer-a', { type: 'string', describe: 'Referer to send with A requests (overrides --referer)' })
     .option('referer-b', { type: 'string', describe: 'Referer to send with B requests (overrides --referer)' })
-    .option('update-cookies', { type: 'boolean', default: true, describe: 'Update cookies file with new cookies received from server' })
     .option('login-check', { type: 'boolean', default: false, describe: 'Check login status: test URL A with cookie A and URL B with cookie B, report Internal Server Error' })
+    .option('follow-token-refresh', { type: 'boolean', default: true, describe: 'Follow OAuth2 token refresh redirects automatically when detected' })
+    .option('credentials', { type: 'string', describe: 'Path to credentials file (line 1: username password for URL A, line 2: username password for URL B)' })
     .help()
     .argv;
 
   const urlsPath = resolveFromCwd(argv.urls);
   const cookiesPath = resolveFromCwd(argv.cookies);
+  const credentialsPath = argv.credentials ? resolveFromCwd(argv.credentials) : null;
 
   if (!fs.existsSync(urlsPath)) {
     console.error(chalk.red(`Missing urls file: ${urlsPath}`));
@@ -91,13 +109,23 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
   }
 
   const spinner = ora('Reading urls and cookies...').start();
-  let urlPairs, cookieHeader;
+  let urlPairs, cookieHeader, credentials = null;
   try {
     const urlsText = fs.readFileSync(urlsPath, 'utf8');
     const cookiesText = fs.readFileSync(cookiesPath, 'utf8');
     urlPairs = parseUrlPairs(urlsText);
     const { cookieA, cookieB } = parseCookiesText(cookiesText);
     cookieHeader = { A: cookieA, B: cookieB };
+
+    // Parse credentials file if provided
+    if (credentialsPath) {
+      if (!fs.existsSync(credentialsPath)) {
+        throw new Error(`Missing credentials file: ${credentialsPath}`);
+      }
+      const credentialsText = fs.readFileSync(credentialsPath, 'utf8');
+      credentials = parseCredentials(credentialsText);
+    }
+
     spinner.succeed('Loaded input files.');
   } catch (err) {
     spinner.fail('Failed to load inputs');
@@ -153,20 +181,77 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
   if (argv['login-check']) {
     const loginCheckSpinner = ora('Checking login status...').start();
     const loginResults = [];
-    
-    for (let i = 0; i < 1; i++) {
+
+    console.log(chalk.blue('\n=== LOGIN CHECK MODE ==='));
+    console.log(chalk.gray(`Testing ${urlPairs.length} URL pairs for login status`));
+    if (credentials) {
+      console.log(chalk.green('✓ Credentials loaded from file'));
+    } else {
+      console.log(chalk.yellow('⚠ No credentials file provided - automatic login disabled'));
+    }
+    console.log('');
+
+    for (let i = 0; i < 3; i++) {
       const [urlA, urlB] = urlPairs[i];
       const pairLabel = `${requestTarget(urlA)}  vs  ${requestTarget(urlB)}`;
-      
+
+      console.log(chalk.cyan(`\n--- Pair ${i + 1}/${urlPairs.length}: ${pairLabel} ---`));
+
       try {
         const refererA = argv['referer-a'] || argv['referer'] || '';
         const refererB = argv['referer-b'] || argv['referer'] || '';
-        
+
+        console.log(chalk.gray(`URL A: ${urlA}`));
+        console.log(chalk.gray(`URL B: ${urlB}`));
+        console.log(chalk.gray(`Cookie A: ${cookieHeader.A ? 'Present' : 'Missing'}`));
+        console.log(chalk.gray(`Cookie B: ${cookieHeader.B ? 'Present' : 'Missing'}`));
+        console.log(chalk.gray(`Credentials A: ${credentials?.A ? 'Present' : 'Missing'}`));
+        console.log(chalk.gray(`Credentials B: ${credentials?.B ? 'Present' : 'Missing'}`));
+
+        console.log(chalk.blue('Fetching both URLs...'));
+        loginCheckSpinner.stop(); // Stop spinner to show detailed logs
+
         const [resA, resB] = await Promise.all([
-          fetchHtml(urlA, { cookieJar: cookieJars.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererA }),
-          fetchHtml(urlB, { cookieJar: cookieJars.B, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererB })
+          fetchHtml(urlA, {
+            cookieJar: cookieJars.A,
+            timeout: argv.timeout,
+            retries: argv.retries,
+            insecure: argv.insecure,
+            referer: refererA,
+            followTokenRefresh: argv['follow-token-refresh'],
+            username: credentials?.A?.username || '',
+            password: credentials?.A?.password || ''
+          }),
+          fetchHtml(urlB, {
+            cookieJar: cookieJars.B,
+            timeout: argv.timeout,
+            retries: argv.retries,
+            insecure: argv.insecure,
+            referer: refererB,
+            followTokenRefresh: argv['follow-token-refresh'],
+            username: credentials?.B?.username || '',
+            password: credentials?.B?.password || ''
+          })
         ]);
-        
+
+        console.log(chalk.green('✓ Both requests completed'));
+
+        // Analyze URL A response
+        console.log(chalk.yellow('\n--- URL A Analysis ---'));
+        console.log(chalk.gray(`Status Code: ${resA.statusCode}`));
+        console.log(chalk.gray(`Response OK: ${resA.ok}`));
+        console.log(chalk.gray(`OAuth2 Flow: ${resA.oAuth2FlowOccurred ? 'YES' : 'NO'}`));
+        console.log(chalk.gray(`Login Occurred: ${resA.loginOccurred ? 'YES' : 'NO'}`));
+        console.log(chalk.gray(`Body Length: ${resA.body ? resA.body.length : 0} characters`));
+
+        // Analyze URL B response
+        console.log(chalk.yellow('\n--- URL B Analysis ---'));
+        console.log(chalk.gray(`Status Code: ${resB.statusCode}`));
+        console.log(chalk.gray(`Response OK: ${resB.ok}`));
+        console.log(chalk.gray(`OAuth2 Flow: ${resB.oAuth2FlowOccurred ? 'YES' : 'NO'}`));
+        console.log(chalk.gray(`Login Occurred: ${resB.loginOccurred ? 'YES' : 'NO'}`));
+        console.log(chalk.gray(`Body Length: ${resB.body ? resB.body.length : 0} characters`));
+
         // Check for "Internal Server Error" and login requirements in response body
         const hasErrorA = resA.body && typeof resA.body === 'string' && resA.body.toLowerCase().includes('internal server error');
         const hasErrorB = resB.body && typeof resB.body === 'string' && resB.body.toLowerCase().includes('internal server error');
@@ -183,12 +268,32 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
                                resB.body.toLowerCase().includes('login required') ||
                                resB.body.toLowerCase().includes('authentication required'));
 
+        console.log(chalk.yellow(`\n--- Error Detection ---`));
+        console.log(chalk.gray(`URL A Internal Server Error: ${hasErrorA ? 'YES' : 'NO'}`));
+        console.log(chalk.gray(`URL A Requires Login: ${requiresLoginA ? 'YES' : 'NO'}`));
+        console.log(chalk.gray(`URL B Internal Server Error: ${hasErrorB ? 'YES' : 'NO'}`));
+        console.log(chalk.gray(`URL B Requires Login: ${requiresLoginB ? 'YES' : 'NO'}`));
+
         const statusA = hasErrorA ? 'FAIL (Internal Server Error)' :
                        requiresLoginA ? 'FAIL (Require login)' :
                        (!resA.ok ? `FAIL (HTTP ${resA.statusCode})` : 'PASS');
         const statusB = hasErrorB ? 'FAIL (Internal Server Error)' :
                        requiresLoginB ? 'FAIL (Require login)' :
                        (!resB.ok ? `FAIL (HTTP ${resB.statusCode})` : 'PASS');
+
+        console.log(chalk.yellow(`\n--- Final Status ---`));
+        console.log(`URL A: ${statusA === 'PASS' ? chalk.green(statusA) : chalk.red(statusA)}`);
+        console.log(`URL B: ${statusB === 'PASS' ? chalk.green(statusB) : chalk.red(statusB)}`);
+
+        // Show brief content snippets if login detected for debugging
+        if (requiresLoginA) {
+          const snippet = resA.body.substring(0, 200).replace(/\s+/g, ' ');
+          console.log(chalk.gray(`URL A Content Preview: ${snippet}...`));
+        }
+        if (requiresLoginB) {
+          const snippet = resB.body.substring(0, 200).replace(/\s+/g, ' ');
+          console.log(chalk.gray(`URL B Content Preview: ${snippet}...`));
+        }
         
         loginResults.push({
           index: i + 1,
@@ -201,10 +306,16 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
           requiresLoginA,
           requiresLoginB,
           httpStatusA: resA.statusCode,
-          httpStatusB: resB.statusCode
+          httpStatusB: resB.statusCode,
+          oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred,
+          loginOccurred: resA.loginOccurred || resB.loginOccurred
         });
         
       } catch (e) {
+        loginCheckSpinner.stop(); // Stop spinner in case of error
+        console.log(chalk.red(`\n❌ Error occurred: ${e.message}`));
+        console.log(chalk.gray(`Error stack: ${e.stack}`));
+
         loginResults.push({
           index: i + 1,
           urlA,
@@ -216,7 +327,9 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
           requiresLoginA: false,
           requiresLoginB: false,
           httpStatusA: 0,
-          httpStatusB: 0
+          httpStatusB: 0,
+          oAuth2FlowOccurred: e.oAuth2FlowOccurred || false,
+          loginOccurred: e.loginOccurred || false
         });
       }
       
@@ -266,15 +379,18 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     console.log(chalk.red(`URL B failures: ${bFailures}`));
     console.log(chalk.red(`Internal Server Errors: ${internalErrors}`));
     console.log(chalk.red(`Login Required Errors: ${loginRequiredErrors}`));
-    
-    if (argv['update-cookies'] && ToughCookie && urlPairs.length > 0) {
+
+    // Check if OAuth2 flow occurred in any of the requests
+    const oAuth2FlowOccurred = loginResults.some(r => r.oAuth2FlowOccurred || r.loginOccurred);
+
+    if (oAuth2FlowOccurred && ToughCookie && urlPairs.length > 0) {
       try {
         const [firstUrlA, firstUrlB] = urlPairs[0];
         const newCookieA = await cookieJars.A.getCookieString(firstUrlA);
         const newCookieB = await cookieJars.B.getCookieString(firstUrlB);
         const updatedCookies = `${newCookieA}\n${newCookieB}`;
         fs.writeFileSync(cookiesPath, updatedCookies, 'utf8');
-        console.log(chalk.green(`\n✓ Updated cookies file: ${cookiesPath}`));
+        console.log(chalk.green(`\n✓ Updated cookies file after OAuth2 flow: ${cookiesPath}`));
       } catch (err) {
         console.log(chalk.yellow(`\n⚠ Failed to update cookies file: ${err.message}`));
       }
@@ -291,7 +407,16 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     const step = ora(`Debug: fetching URL A (#${idx}) ${requestTarget(urlA)}`).start();
     try {
       const dbgReferer = argv['referer-a'] || argv['referer'] || '';
-      const resA = await fetchHtml(urlA, { cookieJar: cookieJars.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: dbgReferer });
+      const resA = await fetchHtml(urlA, {
+        cookieJar: cookieJars.A,
+        timeout: argv.timeout,
+        retries: argv.retries,
+        insecure: argv.insecure,
+        referer: dbgReferer,
+        followTokenRefresh: argv['follow-token-refresh'],
+        username: credentials?.A?.username || '',
+        password: credentials?.A?.password || ''
+      });
       step.stop();
       const usedCookie = (resA.requestHeaders && resA.requestHeaders['Cookie']) || '';
       console.log(chalk.gray('--- Debug info ---'));
@@ -323,8 +448,26 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
       const refererA = argv['referer-a'] || argv['referer'] || '';
       const refererB = argv['referer-b'] || argv['referer'] || '';
       const [resA, resB] = await Promise.all([
-        fetchHtml(urlA, { cookieJar: cookieJars.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererA }),
-        fetchHtml(urlB, { cookieJar: cookieJars.B, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererB })
+        fetchHtml(urlA, {
+          cookieJar: cookieJars.A,
+          timeout: argv.timeout,
+          retries: argv.retries,
+          insecure: argv.insecure,
+          referer: refererA,
+          followTokenRefresh: argv['follow-token-refresh'],
+          username: credentials?.A?.username || '',
+          password: credentials?.A?.password || ''
+        }),
+        fetchHtml(urlB, {
+          cookieJar: cookieJars.B,
+          timeout: argv.timeout,
+          retries: argv.retries,
+          insecure: argv.insecure,
+          referer: refererB,
+          followTokenRefresh: argv['follow-token-refresh'],
+          username: credentials?.B?.username || '',
+          password: credentials?.B?.password || ''
+        })
       ]);
 
       // Log cookie changes after each request
@@ -336,11 +479,11 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
       if (!resA.ok) {
         const aExtra = resA.statusCode === 0 && resA.error ? ` ${resA.error.code || ''} ${resA.error.message || ''}`.trim() : '';
         step.fail(chalk.red(`A failed (${resA.statusCode}${aExtra ? ' ' + aExtra : ''})`));
-        results.push({ index: i + 1, urlA, urlB, pass: false, reason: `A HTTP ${resA.statusCode}${aExtra ? ' ' + aExtra : ''}`.trim(), diff: '' });
+        results.push({ index: i + 1, urlA, urlB, pass: false, reason: `A HTTP ${resA.statusCode}${aExtra ? ' ' + aExtra : ''}`.trim(), diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
       } else if (!resB.ok) {
         const bExtra = resB.statusCode === 0 && resB.error ? ` ${resB.error.code || ''} ${resB.error.message || ''}`.trim() : '';
         step.fail(chalk.red(`B failed (${resB.statusCode}${bExtra ? ' ' + bExtra : ''})`));
-        results.push({ index: i + 1, urlA, urlB, pass: false, reason: `B HTTP ${resB.statusCode}${bExtra ? ' ' + bExtra : ''}`.trim(), diff: '' });
+        results.push({ index: i + 1, urlA, urlB, pass: false, reason: `B HTTP ${resB.statusCode}${bExtra ? ' ' + bExtra : ''}`.trim(), diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
       } else {
         const innerA = extractMenu(resA.body);
         const innerB = extractMenu(resB.body);
@@ -348,7 +491,7 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
         if (innerA.missing || innerB.missing) {
           const which = innerA.missing ? 'A' : 'B';
           step.fail(chalk.red(`#dropmenu missing in ${which}`));
-          results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which}`, diff: '' });
+          results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which}`, diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
         } else {
           const textsA = extractAnchorTexts(innerA.html);
           const textsB = extractAnchorTexts(innerB.html);
@@ -357,17 +500,17 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
           const cmp = compareStrings(listA, listB);
           if (cmp.equal) {
             step.succeed(chalk.green('PASS'));
-            results.push({ index: i + 1, urlA, urlB, pass: true, reason: 'Identical anchors', diff: '' });
+            results.push({ index: i + 1, urlA, urlB, pass: true, reason: 'Identical anchors', diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
           } else {
             step.fail(chalk.red('FAIL'));
             const info = `Anchor counts: A=${textsA.length}, B=${textsB.length}`;
-            results.push({ index: i + 1, urlA, urlB, pass: false, reason: info, diff: cmp.diff });
+            results.push({ index: i + 1, urlA, urlB, pass: false, reason: info, diff: cmp.diff, oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
           }
         }
       }
     } catch (e) {
       step.fail(chalk.red(`Error: ${e.message}`));
-      results.push({ index: i + 1, urlA, urlB, pass: false, reason: e.message, diff: '' });
+      results.push({ index: i + 1, urlA, urlB, pass: false, reason: e.message, diff: '', oAuth2FlowOccurred: e.oAuth2FlowOccurred || false, loginOccurred: e.loginOccurred || false });
     }
 
     if (i < urlPairs.length - 1) {
@@ -392,15 +535,17 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     printFailureDiff(r, { full: showFull });
   }
 
-  // Update cookies file if requested
-  if (argv['update-cookies'] && ToughCookie && urlPairs.length > 0) {
+  // Update cookies file if OAuth2 flow occurred
+  const oAuth2FlowOccurred = results.some(r => r.oAuth2FlowOccurred || r.loginOccurred);
+
+  if (oAuth2FlowOccurred && ToughCookie && urlPairs.length > 0) {
     try {
       const [firstUrlA, firstUrlB] = urlPairs[0];
       const newCookieA = await cookieJars.A.getCookieString(firstUrlA);
       const newCookieB = await cookieJars.B.getCookieString(firstUrlB);
       const updatedCookies = `${newCookieA}\n${newCookieB}`;
       fs.writeFileSync(cookiesPath, updatedCookies, 'utf8');
-      console.log(chalk.green(`\n✓ Updated cookies file: ${cookiesPath}`));
+      console.log(chalk.green(`\n✓ Updated cookies file after OAuth2 flow: ${cookiesPath}`));
     } catch (err) {
       console.log(chalk.yellow(`\n⚠ Failed to update cookies file: ${err.message}`));
     }
