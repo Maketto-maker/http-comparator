@@ -33,7 +33,6 @@ function parseCookiesText(text) {
   const line2 = lines[1] || '';
   const cookieA = cleanCookieString(line1);
   let cookieB = cleanCookieString(line2);
-  if (!cookieB) cookieB = cookieA; // fallback to A if B is missing
   return { cookieA, cookieB };
 }
 
@@ -74,6 +73,8 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     .option('referer', { type: 'string', describe: 'Referer to send with both A and B requests' })
     .option('referer-a', { type: 'string', describe: 'Referer to send with A requests (overrides --referer)' })
     .option('referer-b', { type: 'string', describe: 'Referer to send with B requests (overrides --referer)' })
+    .option('update-cookies', { type: 'boolean', default: true, describe: 'Update cookies file with new cookies received from server' })
+    .option('login-check', { type: 'boolean', default: false, describe: 'Check login status: test URL A with cookie A and URL B with cookie B, report Internal Server Error' })
     .help()
     .argv;
 
@@ -104,6 +105,42 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     process.exit(1);
   }
 
+  // Cookie jar for maintaining cookie state across requests
+  let ToughCookie;
+  try { 
+    ToughCookie = require('tough-cookie'); 
+  } catch (err) { 
+    ToughCookie = null; 
+    console.log(chalk.red('✗ tough-cookie failed to load:'), err.message);
+  }
+  
+  const cookieJars = {
+    A: ToughCookie ? new ToughCookie.CookieJar() : null,
+    B: ToughCookie ? new ToughCookie.CookieJar() : null
+  };
+
+  // Initialize cookie jars with initial cookies using actual URL domains
+  if (ToughCookie && urlPairs.length > 0) {
+    const [firstUrlA, firstUrlB] = urlPairs[0];
+    
+    for (const [key, jar] of Object.entries(cookieJars)) {
+      const initialCookie = key === 'A' ? cookieHeader.A : cookieHeader.B;
+      const targetUrl = key === 'A' ? firstUrlA : firstUrlB;
+      
+      if (initialCookie) {
+        const parts = String(initialCookie).split(';');
+        for (const part of parts) {
+          const trimmed = part.trim();
+          if (!trimmed) continue;
+          try {
+            // Use the actual URL domain for cookie setup
+            await jar.setCookie(trimmed, targetUrl);
+          } catch (_) {}
+        }
+      }
+    }
+  }
+
   const table = new Table({
     head: [chalk.gray('#'), chalk.gray('URL A'), chalk.gray('URL B'), chalk.gray('Status')],
     wordWrap: true,
@@ -112,6 +149,141 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
 
   const results = [];
 
+  // Login check mode: test both URLs with their respective cookies
+  if (argv['login-check']) {
+    const loginCheckSpinner = ora('Checking login status...').start();
+    const loginResults = [];
+    
+    for (let i = 0; i < 1; i++) {
+      const [urlA, urlB] = urlPairs[i];
+      const pairLabel = `${requestTarget(urlA)}  vs  ${requestTarget(urlB)}`;
+      
+      try {
+        const refererA = argv['referer-a'] || argv['referer'] || '';
+        const refererB = argv['referer-b'] || argv['referer'] || '';
+        
+        const [resA, resB] = await Promise.all([
+          fetchHtml(urlA, { cookieJar: cookieJars.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererA }),
+          fetchHtml(urlB, { cookieJar: cookieJars.B, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererB })
+        ]);
+        
+        // Check for "Internal Server Error" and login requirements in response body
+        const hasErrorA = resA.body && typeof resA.body === 'string' && resA.body.toLowerCase().includes('internal server error');
+        const hasErrorB = resB.body && typeof resB.body === 'string' && resB.body.toLowerCase().includes('internal server error');
+
+        // Check for login requirement indicators
+        const requiresLoginA = resA.body && typeof resA.body === 'string' &&
+                              (resA.body.toLowerCase().includes('log in to market observer to continue to market observer') ||
+                               resA.body.toLowerCase().includes('please log in') ||
+                               resA.body.toLowerCase().includes('login required') ||
+                               resA.body.toLowerCase().includes('authentication required'));
+        const requiresLoginB = resB.body && typeof resB.body === 'string' &&
+                              (resB.body.toLowerCase().includes('log in to market observer to continue to market observer') ||
+                               resB.body.toLowerCase().includes('please log in') ||
+                               resB.body.toLowerCase().includes('login required') ||
+                               resB.body.toLowerCase().includes('authentication required'));
+
+        const statusA = hasErrorA ? 'FAIL (Internal Server Error)' :
+                       requiresLoginA ? 'FAIL (Require login)' :
+                       (!resA.ok ? `FAIL (HTTP ${resA.statusCode})` : 'PASS');
+        const statusB = hasErrorB ? 'FAIL (Internal Server Error)' :
+                       requiresLoginB ? 'FAIL (Require login)' :
+                       (!resB.ok ? `FAIL (HTTP ${resB.statusCode})` : 'PASS');
+        
+        loginResults.push({
+          index: i + 1,
+          urlA,
+          urlB,
+          statusA,
+          statusB,
+          hasErrorA,
+          hasErrorB,
+          requiresLoginA,
+          requiresLoginB,
+          httpStatusA: resA.statusCode,
+          httpStatusB: resB.statusCode
+        });
+        
+      } catch (e) {
+        loginResults.push({
+          index: i + 1,
+          urlA,
+          urlB,
+          statusA: `ERROR (${e.message})`,
+          statusB: `ERROR (${e.message})`,
+          hasErrorA: false,
+          hasErrorB: false,
+          requiresLoginA: false,
+          requiresLoginB: false,
+          httpStatusA: 0,
+          httpStatusB: 0
+        });
+      }
+      
+      if (i < urlPairs.length - 1) {
+        await delay(argv.delay);
+      }
+    }
+    
+    loginCheckSpinner.stop();
+    
+    // Display login check results
+    const loginTable = new Table({
+      head: [chalk.gray('#'), chalk.gray('URL A'), chalk.gray('URL B'), chalk.gray('Status A'), chalk.gray('Status B')],
+      wordWrap: true,
+      colWidths: [5, 60, 60, 25, 25]
+    });
+    
+    for (const r of loginResults) {
+      const statusAColor = r.hasErrorA || r.requiresLoginA ? chalk.bgRed.white(' FAIL ') :
+                          (!r.httpStatusA || r.httpStatusA < 200 || r.httpStatusA >= 300) ? chalk.bgRed.white(' FAIL ') :
+                          chalk.bgGreen.black(' PASS ');
+      const statusBColor = r.hasErrorB || r.requiresLoginB ? chalk.bgRed.white(' FAIL ') :
+                          (!r.httpStatusB || r.httpStatusB < 200 || r.httpStatusB >= 300) ? chalk.bgRed.white(' FAIL ') :
+                          chalk.bgGreen.black(' PASS ');
+      
+      loginTable.push([
+        r.index,
+        chalk.cyan(requestTarget(r.urlA)),
+        chalk.cyan(requestTarget(r.urlB)),
+        statusAColor,
+        statusBColor
+      ]);
+    }
+    
+    console.log('\n' + loginTable.toString() + '\n');
+    
+    // Summary
+    const totalPairs = loginResults.length;
+    const aFailures = loginResults.filter(r => r.hasErrorA || r.requiresLoginA || !r.httpStatusA || r.httpStatusA < 200 || r.httpStatusA >= 300).length;
+    const bFailures = loginResults.filter(r => r.hasErrorB || r.requiresLoginB || !r.httpStatusB || r.httpStatusB < 200 || r.httpStatusB >= 300).length;
+    const internalErrors = loginResults.filter(r => r.hasErrorA || r.hasErrorB).length;
+    const loginRequiredErrors = loginResults.filter(r => r.requiresLoginA || r.requiresLoginB).length;
+    
+    console.log(chalk.gray('Login Check Summary:'));
+    console.log(chalk.gray(`Total pairs tested: ${totalPairs}`));
+    console.log(chalk.red(`URL A failures: ${aFailures}`));
+    console.log(chalk.red(`URL B failures: ${bFailures}`));
+    console.log(chalk.red(`Internal Server Errors: ${internalErrors}`));
+    console.log(chalk.red(`Login Required Errors: ${loginRequiredErrors}`));
+    
+    if (argv['update-cookies'] && ToughCookie && urlPairs.length > 0) {
+      try {
+        const [firstUrlA, firstUrlB] = urlPairs[0];
+        const newCookieA = await cookieJars.A.getCookieString(firstUrlA);
+        const newCookieB = await cookieJars.B.getCookieString(firstUrlB);
+        const updatedCookies = `${newCookieA}\n${newCookieB}`;
+        fs.writeFileSync(cookiesPath, updatedCookies, 'utf8');
+        console.log(chalk.green(`\n✓ Updated cookies file: ${cookiesPath}`));
+      } catch (err) {
+        console.log(chalk.yellow(`\n⚠ Failed to update cookies file: ${err.message}`));
+      }
+    }
+    
+    const hasFailures = aFailures > 0 || bFailures > 0;
+    process.exit(hasFailures ? 1 : 0);
+  }
+
   // Debug mode: fetch URL A of a selected pair and print raw HTML, then exit
   if (argv.debug) {
     const idx = Math.min(Math.max(1, Number(argv['debug-index']) || 1), urlPairs.length);
@@ -119,7 +291,7 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     const step = ora(`Debug: fetching URL A (#${idx}) ${requestTarget(urlA)}`).start();
     try {
       const dbgReferer = argv['referer-a'] || argv['referer'] || '';
-      const resA = await fetchHtml(urlA, { cookie: cookieHeader.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: dbgReferer });
+      const resA = await fetchHtml(urlA, { cookieJar: cookieJars.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: dbgReferer });
       step.stop();
       const usedCookie = (resA.requestHeaders && resA.requestHeaders['Cookie']) || '';
       console.log(chalk.gray('--- Debug info ---'));
@@ -146,13 +318,20 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     const pairLabel = `${requestTarget(urlA)}  vs  ${requestTarget(urlB)}`;
     const step = ora(`Fetching [${i + 1}/${urlPairs.length}] ${pairLabel}`).start();
 
+ 
     try {
       const refererA = argv['referer-a'] || argv['referer'] || '';
       const refererB = argv['referer-b'] || argv['referer'] || '';
       const [resA, resB] = await Promise.all([
-        fetchHtml(urlA, { cookie: cookieHeader.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererA }),
-        fetchHtml(urlB, { cookie: cookieHeader.B, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererB })
+        fetchHtml(urlA, { cookieJar: cookieJars.A, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererA }),
+        fetchHtml(urlB, { cookieJar: cookieJars.B, timeout: argv.timeout, retries: argv.retries, insecure: argv.insecure, referer: refererB })
       ]);
+
+      // Log cookie changes after each request
+      if (i === 0) {
+        console.log(chalk.gray('After first request - Cookies for URL A:') + chalk.yellow(await cookieJars.A.getCookieString(urlA)));
+        console.log(chalk.gray('After first request - Cookies for URL B:') + chalk.yellow(await cookieJars.B.getCookieString(urlB)));
+      }
 
       if (!resA.ok) {
         const aExtra = resA.statusCode === 0 && resA.error ? ` ${resA.error.code || ''} ${resA.error.message || ''}`.trim() : '';
@@ -211,6 +390,20 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
   const showFull = Boolean(argv['full-diff']);
   for (const r of results.filter(x => !x.pass && x.diff)) {
     printFailureDiff(r, { full: showFull });
+  }
+
+  // Update cookies file if requested
+  if (argv['update-cookies'] && ToughCookie && urlPairs.length > 0) {
+    try {
+      const [firstUrlA, firstUrlB] = urlPairs[0];
+      const newCookieA = await cookieJars.A.getCookieString(firstUrlA);
+      const newCookieB = await cookieJars.B.getCookieString(firstUrlB);
+      const updatedCookies = `${newCookieA}\n${newCookieB}`;
+      fs.writeFileSync(cookiesPath, updatedCookies, 'utf8');
+      console.log(chalk.green(`\n✓ Updated cookies file: ${cookiesPath}`));
+    } catch (err) {
+      console.log(chalk.yellow(`\n⚠ Failed to update cookies file: ${err.message}`));
+    }
   }
 
   // Summary & exit code

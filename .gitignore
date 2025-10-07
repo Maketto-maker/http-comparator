@@ -32,11 +32,15 @@ temp/
 .env
 .env.*
 cookies.txt
+cookies*
 
 # OS / Editor
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
+
+.claude*
+claude-code
 
 

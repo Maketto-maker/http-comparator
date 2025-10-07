@@ -5,20 +5,21 @@
     "type": "commonjs",
     "main": "index.js",
     "scripts": {
-    "start": "node index.js",
-    "test:url": "node index.js --urls urls.txt --cookies cookies.txt"
+        "start": "node index.js",
+        "test:url": "node index.js --urls urls.txt --cookies cookies.txt"
     },
     "engines": {
-    "node": ">=16"
+        "node": ">=16"
     },
     "dependencies": {
-    "chalk": "^4.1.2",
-    "cheerio": "^1.0.0-rc.12",
-    "cli-table3": "^0.6.5",
-    "diff": "^5.2.0",
-    "got": "^11.8.6",
-    "he": "^1.2.0",
-    "ora": "^5.4.1",
-    "yargs": "^17.7.2"
+        "chalk": "^4.1.2",
+        "cheerio": "^1.0.0-rc.12",
+        "cli-table3": "^0.6.5",
+        "diff": "^5.2.0",
+        "got": "^11.8.6",
+        "he": "^1.2.0",
+        "ora": "^5.4.1",
+        "tough-cookie": "^6.0.0",
+        "yargs": "^17.7.2"
     }
 }
