@@ -70,3 +70,4 @@ https://it-sampling.marketobserver.asia/sampling/quotagroup/save.do?research_id=
 https://it-sampling.marketobserver.asia/sampling/research/save.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/research/save.do?research_id=1290874
 https://it-sampling.marketobserver.asia/sampling/research/show.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/research/show.do?research_id=1290874
 https://it-sampling.marketobserver.asia/sampling/research/tag_create.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/research/tag_create.do?research_id=1290874
+https://it-sampling.marketobserver.asia/sampling/research/copy.do?matter_id=5185327, https://st-sampling.marketobserver.asia/sampling/research/copy.do?matter_id=162765
