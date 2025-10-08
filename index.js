@@ -9,11 +9,11 @@ const Table = require('cli-table3');
 
 const fetchHtml = require('./lib/fetch');
 const extractMenu = require('./lib/extract');
-const normalizeHtml = require('./lib/normalize');
 const { compareStrings } = require('./lib/compare');
 const { printSummary, printFailureDiff } = require('./lib/print');
 const { requestTarget } = require('./lib/url');
 const { extractAnchorTexts } = require('./lib/anchors');
+const { saveHtmlReport } = require('./lib/report');
 
 function resolveFromCwd(p) { return path.resolve(process.cwd(), p); }
 
@@ -93,6 +93,7 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     .option('follow-token-refresh', { type: 'boolean', default: true, describe: 'Follow OAuth2 token refresh redirects automatically when detected' })
     .option('credentials', { type: 'string', describe: 'Path to credentials file (line 1: username password for URL A, line 2: username password for URL B)' })
     .option('line', { type: 'number', describe: 'Filter URLs file to specific line number (1-based index)' })
+    .option('html-report', { type: 'boolean', default: true, describe: 'Generate HTML report in reports/ directory with colors and formatting preserved' })
     .help()
     .argv;
 
@@ -207,11 +208,11 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     }
     console.log('');
 
-    for (let i = 0; i < urlPairs.length; i++) {
+    for (let i = 0; i < Math.min(urlPairs.length, 3); i++) {
       const [urlA, urlB] = urlPairs[i];
       const pairLabel = `${requestTarget(urlA)}  vs  ${requestTarget(urlB)}`;
 
-      console.log(chalk.cyan(`\n--- Pair ${i + 1}/${urlPairs.length}: ${pairLabel} ---`));
+      console.log(chalk.cyan(`\n--- Pair ${i + 1}/${Math.min(urlPairs.length, 3)}: ${pairLabel} ---`));
 
       try {
         const refererA = argv['referer-a'] || argv['referer'] || '';
@@ -395,6 +396,40 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     console.log(chalk.red(`URL B failures: ${bFailures}`));
     console.log(chalk.red(`Internal Server Errors: ${internalErrors}`));
     console.log(chalk.red(`Login Required Errors: ${loginRequiredErrors}`));
+
+    // Generate HTML report if requested for login-check mode
+    if (argv['html-report']) {
+      try {
+        // Convert login results to standard results format for HTML report
+        const loginResultsForReport = loginResults.map(r => ({
+          index: r.index,
+          urlA: r.urlA,
+          urlB: r.urlB,
+          pass: !r.hasErrorA && !r.requiresLoginA && !r.hasErrorB && !r.requiresLoginB &&
+                r.httpStatusA >= 200 && r.httpStatusA < 300 && r.httpStatusB >= 200 && r.httpStatusB < 300,
+          reason: `A: ${r.statusA}, B: ${r.statusB}`,
+          diff: ''
+        }));
+
+        const loginSummaryData = {
+          total: totalPairs,
+          pass: totalPairs - Math.max(aFailures, bFailures),
+          fail: Math.max(aFailures, bFailures)
+        };
+
+        const metadata = {
+          urls: path.basename(argv.urls),
+          cookies: path.basename(argv.cookies),
+          fullDiff: Boolean(argv['full-diff']),
+          mode: 'login-check'
+        };
+
+        const reportPath = saveHtmlReport(loginResultsForReport, loginSummaryData, [], metadata);
+        console.log(chalk.green(`\n✓ HTML report saved: ${reportPath}`));
+      } catch (err) {
+        console.log(chalk.yellow(`\n⚠ Failed to generate HTML report: ${err.message}`));
+      }
+    }
 
     // Check if OAuth2 flow occurred in any of the requests
     const oAuth2FlowOccurred = loginResults.some(r => r.oAuth2FlowOccurred || r.loginOccurred);
@@ -639,6 +674,25 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
   // Summary & exit code
   const passCount = results.filter(r => r.pass).length;
   const failCount = results.length - passCount;
-  printSummary({ total: results.length, pass: passCount, fail: failCount });
+  const summaryData = { total: results.length, pass: passCount, fail: failCount };
+  printSummary(summaryData);
+
+  // Generate HTML report if requested
+  if (argv['html-report']) {
+    try {
+      const failures = results.filter(r => !r.pass && r.diff);
+      const metadata = {
+        urls: path.basename(argv.urls),
+        cookies: path.basename(argv.cookies),
+        fullDiff: Boolean(argv['full-diff'])
+      };
+
+      const reportPath = saveHtmlReport(results, summaryData, failures, metadata);
+      console.log(chalk.green(`\n✓ HTML report saved: ${reportPath}`));
+    } catch (err) {
+      console.log(chalk.yellow(`\n⚠ Failed to generate HTML report: ${err.message}`));
+    }
+  }
+
   process.exit(failCount > 0 ? 1 : 0);
 })();
