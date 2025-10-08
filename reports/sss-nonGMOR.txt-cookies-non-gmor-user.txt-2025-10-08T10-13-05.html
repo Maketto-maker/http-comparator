@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPS Menu Comparator Report - sss-nonGMOR.txt-cookies-non-gmor-user.txt-2025-10-08T10-13-05</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #ffffff;
+            margin: 30px 0 15px 0;
+            font-size: 18px;
+        }
+
+        .metadata {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4a9eff;
+        }
+
+        .metadata p {
+            margin: 5px 0;
+        }
+
+        .summary {
+            margin-bottom: 30px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .bg-red {
+            background-color: #dc3545;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .bg-green {
+            background-color: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .text-black {
+            color: black;
+        }
+
+        .text-green {
+            color: #28a745;
+        }
+
+        .text-red {
+            color: #dc3545;
+        }
+
+        .text-cyan {
+            color: #17a2b8;
+        }
+
+        .text-gray {
+            color: #6c757d;
+        }
+
+        .text-yellow {
+            color: #ffc107;
+        }
+
+        .text-blue {
+            color: #007bff;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: #2a2a2a;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .results-table th {
+            background-color: #333;
+            color: #e0e0e0;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #444;
+        }
+
+        .results-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #444;
+            vertical-align: top;
+        }
+
+        .results-table tr:hover {
+            background-color: #333;
+        }
+
+        .url-cell {
+            max-width: 300px;
+            word-break: break-all;
+            font-size: 12px;
+        }
+
+        .index-cell {
+            text-align: center;
+            width: 50px;
+        }
+
+        .status-cell {
+            text-align: center;
+            width: 80px;
+        }
+
+        .failure-section {
+            margin: 30px 0;
+            background-color: #2a2a2a;
+            border-radius: 5px;
+            padding: 20px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .failure-header {
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .diff-content {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 3px;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .diff-line-add {
+            color: #28a745;
+        }
+
+        .diff-line-remove {
+            color: #dc3545;
+        }
+
+        .diff-line-context {
+            color: #17a2b8;
+        }
+
+        .truncated-notice {
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .no-failures {
+            text-align: center;
+            color: #28a745;
+            font-size: 18px;
+            margin: 40px 0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #6c757d;
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTTPS Menu Comparator Report</h1>
+
+        <div class="metadata">
+            <p><strong>Report Name:</strong> sss-nonGMOR.txt-cookies-non-gmor-user.txt-2025-10-08T10-13-05</p>
+            <p><strong>Generated:</strong> 10/8/2025, 7:13:05 PM</p>
+            <p><strong>URLs File:</strong> sss-nonGMOR.txt</p>
+            <p><strong>Cookies File:</strong> cookies-non-gmor-user.txt</p>
+            <p><strong>Total Comparisons:</strong> 69</p>
+        </div>
+
+        <div class="summary">
+            <span class="bg-red text-white"> SOME FAIL </span> <strong>Summary: 10 passed, 59 failed (total 69)</strong>
+        </div>
+
+        <h2>Results Overview</h2>
+        
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th class="index-cell">#</th>
+                <th class="url-cell">URL A</th>
+                <th class="url-cell">URL B</th>
+                <th class="status-cell">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+  
+            <tr>
+                <td class="index-cell">1</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/list.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/list.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">2</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/init.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/init.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">3</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/restoreresearchlist.do?initialize=true</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/restoreresearchlist.do?initialize=true</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">4</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">5</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">6</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/copy.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/copy.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">7</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/pointEdit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/pointEdit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">8</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/collectStatusView.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/collectStatusView.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">9</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/edit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/edit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">10</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/pointgiven/view.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/pointgiven/view.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">11</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/edit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/edit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">12</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkCreateInit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkCreateInit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">13</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEdit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEdit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">14</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_edit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_edit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">15</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderlist/list.do?initialize=true&amp;research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderlist/list.do?initialize=true&amp;research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">16</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/input.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/input.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">17</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/input.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/input.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">18</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/autoOrderView.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/autoOrderView.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">19</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_edit.do?enq_id=18706577</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_edit.do?enq_id=2350916</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">20</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_view.do?enq_id=18706577</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_view.do?enq_id=2350916</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">21</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_panel_edit.do?enq_id=18706577</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_panel_edit.do?enq_id=2350916</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">22</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_bulk_edit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_bulk_edit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">23</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_bulk_confirm.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_bulk_confirm.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">24</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_bulk_create.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/quotagroup_bulk_create.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">25</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_confirm.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_confirm.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">26</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_save.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_save.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">27</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_save.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_save.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">28</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_save_nc.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_save_nc.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">29</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_upload.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_upload.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">30</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_upload.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_upload.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">31</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_table.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_table.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">32</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/create_restore_research.do</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/create_restore_research.do</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">33</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/confirm.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/confirm.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">34</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/complete.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/complete.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">35</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/registShow.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/registShow.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">36</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEdit.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEdit.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">37</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEditConfirm.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEditConfirm.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">38</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEditFinish.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEditFinish.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">39</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEditError.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/bulkEditError.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">40</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/confirm.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/confirm.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">41</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/complete.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/complete.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">42</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/registShow.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/registShow.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">43</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/autoOrderResearchesUpdate.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/autoOrderResearchesUpdate.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">44</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/confirm.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/confirm.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">45</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/show.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/show.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">46</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/complete.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/complete.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">47</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/finish.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/finish.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">48</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/check.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/check.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">49</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/duplicate_view.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/duplicate_view.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">50</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/view.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/view.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">51</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/add.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/add.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">52</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/delete.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/delete.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">53</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/download.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/download.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">54</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/property_download_view.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/property_download_view.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">55</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/property_download.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/property_download.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">56</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download_view.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download_view.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">57</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">58</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/sample_report_view.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/sample_report_view.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">59</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/download_sample_report_from_matter_num.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/download_sample_report_from_matter_num.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">60</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/rr_point_download_view.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/rr_point_download_view.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">61</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/rr_point_download.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/rr_point_download.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">62</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/project_check_sheet_view.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/project_check_sheet_view.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">63</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/matter_check_sheet_download.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/matter_check_sheet_download.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">64</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies_view.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies_view.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">65</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies.do?matter_id=5185328</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies.do?matter_id=162766</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">66</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/cancel.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/cancel.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">67</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/show.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/show.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">68</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/unlink_update.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/unlink_update.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">69</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/pointgiven/status_update.do?research_id=25303834</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/pointgiven/status_update.do?research_id=1290880</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+        </tbody>
+    </table>
+  
+
+        <h2>Failure Details</h2>
+        
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #2</strong><br>
+                   <span class="text-gray">/sampling/idupload/init.do?research_id=25303834  vs  /sampling/idupload/init.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #4</strong><br>
+                   <span class="text-gray">/sampling/research/input.do?matter_id=5185328  vs  /sampling/research/input.do?matter_id=162766</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -1,4 +1,6 @@</div><div class="diff-line-add">+[DISABLED] Edit Survey</div><div class=""> View Projects</div><div class=""> New Project Registration</div><div class=""> List of long-term projects</div><div class=""> Restore History</div><div class="diff-line-add">+Add Survey Detail</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #7</strong><br>
+                   <span class="text-gray">/sampling/research/pointEdit.do?research_id=25303834  vs  /sampling/research/pointEdit.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,4 +6,5 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-add">+Edit Incentive Information</div><div class=""> Quota Information</div><div class=""> Create</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #9</strong><br>
+                   <span class="text-gray">/sampling/survey/edit.do?research_id=25303834  vs  /sampling/survey/edit.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #10</strong><br>
+                   <span class="text-gray">/sampling/pointgiven/view.do?research_id=25303834  vs  /sampling/pointgiven/view.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -10,12 +10,7 @@</div><div class=""> Edit Questionnaire Information</div><div class=""> Edit Incentive Information</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class="diff-line-remove">-PointUp settings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #14</strong><br>
+                   <span class="text-gray">/sampling/query/exclusion_edit.do?research_id=25303834  vs  /sampling/query/exclusion_edit.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -1,3 +1,2 @@</div><div class="diff-line-remove">-[DISABLED] Exclusion</div><div class=""> View Projects</div><div class=""> New Project Registration</div><div class="diff-line-context">@@ -15,3 +14,4 @@</div><div class=""> from ID List</div><div class=""> Edit Quota</div><div class="diff-line-add">+Exclusion</div><div class=""> Collection Status</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #15</strong><br>
+                   <span class="text-gray">/sampling/orderlist/list.do?initialize=true&amp;research_id=25303834  vs  /sampling/orderlist/list.do?initialize=true&amp;research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -7,18 +7,12 @@</div><div class=""> Edit Questionnaire Information</div><div class=""> Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class=""> Invitation Order</div><div class=""> Create Invitation Order</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #16</strong><br>
+                   <span class="text-gray">/sampling/orderregist/input.do?research_id=25303834  vs  /sampling/orderregist/input.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -13,6 +13,4 @@</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #17</strong><br>
+                   <span class="text-gray">/sampling/autoorder/input.do?research_id=25303834  vs  /sampling/autoorder/input.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -13,6 +13,4 @@</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #25</strong><br>
+                   <span class="text-gray">/sampling/query/exclusion_confirm.do?research_id=25303834  vs  /sampling/query/exclusion_confirm.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -1,3 +1,2 @@</div><div class="diff-line-remove">-[DISABLED] Exclusion</div><div class=""> View Projects</div><div class=""> New Project Registration</div><div class="diff-line-context">@@ -15,3 +14,4 @@</div><div class=""> from ID List</div><div class=""> Edit Quota</div><div class="diff-line-add">+Exclusion</div><div class=""> Collection Status</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #33</strong><br>
+                   <span class="text-gray">/sampling/orderregist/confirm.do?research_id=25303834  vs  /sampling/orderregist/confirm.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -13,6 +13,4 @@</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #34</strong><br>
+                   <span class="text-gray">/sampling/orderregist/complete.do?research_id=25303834  vs  /sampling/orderregist/complete.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -13,6 +13,4 @@</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #35</strong><br>
+                   <span class="text-gray">/sampling/orderregist/registShow.do?research_id=25303834  vs  /sampling/orderregist/registShow.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -13,6 +13,4 @@</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #40</strong><br>
+                   <span class="text-gray">/sampling/autoorder/confirm.do?research_id=25303834  vs  /sampling/autoorder/confirm.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -13,6 +13,4 @@</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #42</strong><br>
+                   <span class="text-gray">/sampling/autoorder/registShow.do?research_id=25303834  vs  /sampling/autoorder/registShow.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -13,6 +13,4 @@</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class=""> Exclusion</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #44</strong><br>
+                   <span class="text-gray">/sampling/idupload/confirm.do?research_id=25303834  vs  /sampling/idupload/confirm.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #45</strong><br>
+                   <span class="text-gray">/sampling/idupload/show.do?research_id=25303834  vs  /sampling/idupload/show.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #46</strong><br>
+                   <span class="text-gray">/sampling/idupload/complete.do?research_id=25303834  vs  /sampling/idupload/complete.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #47</strong><br>
+                   <span class="text-gray">/sampling/idupload/finish.do?research_id=25303834  vs  /sampling/idupload/finish.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #49</strong><br>
+                   <span class="text-gray">/sampling/idupload/duplicate_view.do?research_id=25303834  vs  /sampling/idupload/duplicate_view.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #64</strong><br>
+                   <span class="text-gray">/sampling/projects/copies_view.do?matter_id=5185328  vs  /sampling/projects/copies_view.do?matter_id=162766</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -1,5 +1,4 @@</div><div class=""> View Projects</div><div class=""> New Project Registration</div><div class="diff-line-remove">-My projects</div><div class=""> List of long-term projects</div><div class=""> Restore History</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #65</strong><br>
+                   <span class="text-gray">/sampling/projects/copies.do?matter_id=5185328  vs  /sampling/projects/copies.do?matter_id=162766</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -1,5 +1,4 @@</div><div class=""> View Projects</div><div class=""> New Project Registration</div><div class="diff-line-remove">-My projects</div><div class=""> List of long-term projects</div><div class=""> Restore History</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #67</strong><br>
+                   <span class="text-gray">/sampling/survey/show.do?research_id=25303834  vs  /sampling/survey/show.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #68</strong><br>
+                   <span class="text-gray">/sampling/survey/unlink_update.do?research_id=25303834  vs  /sampling/survey/unlink_update.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -6,22 +6,9 @@</div><div class=""> Edit Survey</div><div class=""> Edit Questionnaire Information</div><div class="diff-line-remove">-Edit Incentive Information</div><div class="diff-line-remove">-Process Special Incentives</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class=""> Edit Quota</div><div class="diff-line-remove">-Exclusion</div><div class=""> Collection Status</div><div class="diff-line-remove">-PointUp settings</div><div class="diff-line-remove">-Invitation Order</div><div class="diff-line-remove">-Create Invitation Order</div><div class="diff-line-remove">-Automatic distribution settings</div><div class="diff-line-remove">-Distribution data reservation list</div><div class="diff-line-remove">-Invite Order Timings</div><div class=""></div></div>
+      </div>
+    
+      <div class="failure-section">
+        <div class="failure-header"><span class="bg-red text-white"> FAIL </span> <strong>Difference for pair #69</strong><br>
+                   <span class="text-gray">/sampling/pointgiven/status_update.do?research_id=25303834  vs  /sampling/pointgiven/status_update.do?research_id=1290880</span></div>
+        <div class="diff-content"><div class="">===================================================================</div><div class="diff-line-remove">--- menu-old	</div><div class="diff-line-add">+++ menu-new	</div><div class="diff-line-context">@@ -10,12 +10,7 @@</div><div class=""> Edit Questionnaire Information</div><div class=""> Edit Incentive Information</div><div class="diff-line-remove">-Process Unprocessed Points</div><div class=""> Quota Information</div><div class=""> Create</div><div class="diff-line-remove">-New Quota</div><div class=""> Saved Feasibility</div><div class=""> from Feasibility</div><div class=""> from ID List</div><div class="diff-line-remove">-Create Quotas collectively (Base attributes)</div><div class="diff-line-remove">-Create Noncloud Quota</div><div class="diff-line-remove">-PointUp settings</div><div class=""></div></div>
+      </div>
+    
+
+        <div class="footer">
+            Generated by HTTPS Menu Comparator v1.0<br>
+            Report generated at 2025-10-08T10:13:05.093Z
+        </div>
+    </div>
+</body>
+</html>
