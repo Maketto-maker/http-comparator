@@ -85,3 +85,4 @@ https://it-sampling.marketobserver.asia/sampling/quotagroup/list.do?research_id=
   https://it-sampling.marketobserver.asia/sampling/pointgiven/status_update.do?research_id=25303840, https://st-sampling.marketobserver.asia/sampling/pointgiven/status_update.do?research_id=1290876
   https://it-sampling.marketobserver.asia/sampling/pointgiven/target_download.do?research_id=25303840, https://st-sampling.marketobserver.asia/sampling/pointgiven/target_download.do?research_id=1290876
   https://it-sampling.marketobserver.asia/sampling/pointgiven/target_complete_download.do?research_id=25303840, https://st-sampling.marketobserver.asia/sampling/pointgiven/target_complete_download.do?research_id=1290876
+  https://it-sampling.marketobserver.asia/sampling/research/copy.do?matter_id=5185327, https://st-sampling.marketobserver.asia/sampling/research/copy.do?matter_id=162765
