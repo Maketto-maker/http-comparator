@@ -52,9 +52,6 @@ https://it-sampling.marketobserver.asia/sampling/jissahelper/property_download_v
 https://it-sampling.marketobserver.asia/sampling/jissahelper/property_download.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/jissahelper/property_download.do?research_id=1290874
 https://it-sampling.marketobserver.asia/sampling/jissahelper/deli_or_ans_id_download_view.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/jissahelper/deli_or_ans_id_download_view.do?research_id=1290874
 https://it-sampling.marketobserver.asia/sampling/jissahelper/deli_or_ans_id_download.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/jissahelper/deli_or_ans_id_download.do?research_id=1290874
-https://it-sampling.marketobserver.asia/sampling/jissahelper/download_sample_report_from_matter_num.do?matter_id=5185327, https://st-sampling.marketobserver.asia/sampling/jissahelper/download_sample_report_from_matter_num.do?matter_id=162765
-https://it-sampling.marketobserver.asia/sampling/jissahelper/rr_point_download.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/jissahelper/rr_point_download.do?research_id=1290874
-https://it-sampling.marketobserver.asia/sampling/jissahelper/matter_check_sheet_download.do?matter_id=5185327, https://st-sampling.marketobserver.asia/sampling/jissahelper/matter_check_sheet_download.do?matter_id=162765
 https://it-sampling.marketobserver.asia/sampling/projects/copies_view.do?matter_id=5185327, https://st-sampling.marketobserver.asia/sampling/projects/copies_view.do?matter_id=162765
 https://it-sampling.marketobserver.asia/sampling/projects/copies.do?matter_id=5185327, https://st-sampling.marketobserver.asia/sampling/projects/copies.do?matter_id=162765
 https://it-sampling.marketobserver.asia/sampling/survey/cancel.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/survey/cancel.do?research_id=1290874
