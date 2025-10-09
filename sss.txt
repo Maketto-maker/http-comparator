@@ -37,9 +37,6 @@ https://it-sampling.marketobserver.asia/sampling/orderedit/confirm.do?order_id=2
 https://it-sampling.marketobserver.asia/sampling/orderedit/regist.do?order_id=255590, https://st-sampling.marketobserver.asia/sampling/orderedit/regist.do?order_id=2124769
 https://it-sampling.marketobserver.asia/sampling/orderedit/reedit.do?order_id=255590, https://st-sampling.marketobserver.asia/sampling/orderedit/reedit.do?order_id=2124769
 https://it-sampling.marketobserver.asia/sampling/orderedit/bulkEdit.do, https://st-sampling.marketobserver.asia/sampling/orderedit/bulkEdit.do
-https://it-sampling.marketobserver.asia/sampling/orderedit/bulkEditConfirm.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/orderedit/bulkEditConfirm.do?research_id=1290874
-https://it-sampling.marketobserver.asia/sampling/orderedit/bulkEditFinish.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/orderedit/bulkEditFinish.do?research_id=1290874
-https://it-sampling.marketobserver.asia/sampling/orderedit/bulkEditError.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/orderedit/bulkEditError.do?research_id=1290874
 https://it-sampling.marketobserver.asia/sampling/autoorder/confirm.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/autoorder/confirm.do?research_id=1290874
 https://it-sampling.marketobserver.asia/sampling/autoorder/registShow.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/autoorder/registShow.do?research_id=1290874
 https://it-sampling.marketobserver.asia/sampling/idupload/confirm.do?research_id=25303828, https://st-sampling.marketobserver.asia/sampling/idupload/confirm.do?research_id=1290874
