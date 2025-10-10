@@ -8,7 +8,6 @@ https://it-sampling.marketobserver.asia/sampling/research/pointEdit.do?research_
 https://it-sampling.marketobserver.asia/sampling/pointgiven/view.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/pointgiven/view.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/query/edit.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/query/edit.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/quotagroup/bulkCreateInit.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/quotagroup/bulkCreateInit.do?research_id=1290882
-https://it-sampling.marketobserver.asia/sampling/query/edit_nc.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/query/edit_nc.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/quotagroup/bulkEdit.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/quotagroup/bulkEdit.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/query/exclusion_edit.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/query/exclusion_edit.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/orderlist/list.do?initialize=true&research_id=25303836, https://st-sampling.marketobserver.asia/sampling/orderlist/list.do?initialize=true&research_id=1290882
@@ -22,7 +21,6 @@ https://it-sampling.marketobserver.asia/sampling/quotagroup/bulkCreate.do?resear
 https://it-sampling.marketobserver.asia/sampling/query/exclusion_confirm.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/query/exclusion_confirm.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/query/exclusion_save.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/query/exclusion_save.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/query/target_save.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/query/target_save.do?research_id=1290882
-https://it-sampling.marketobserver.asia/sampling/query/target_save_nc.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/query/target_save_nc.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/orderregist/confirm.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/orderregist/confirm.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/orderregist/complete.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/orderregist/complete.do?research_id=1290882
 https://it-sampling.marketobserver.asia/sampling/orderregist/registShow.do?research_id=25303836, https://st-sampling.marketobserver.asia/sampling/orderregist/registShow.do?research_id=1290882
