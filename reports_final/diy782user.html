@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPS Menu Comparator Report - diy-782.txt-cookies.txt-2025-10-25T10-38-24</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #ffffff;
+            margin: 30px 0 15px 0;
+            font-size: 18px;
+        }
+
+        .metadata {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4a9eff;
+        }
+
+        .metadata p {
+            margin: 5px 0;
+        }
+
+        .summary {
+            margin-bottom: 30px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .bg-red {
+            background-color: #dc3545;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .bg-green {
+            background-color: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .text-black {
+            color: black;
+        }
+
+        .text-green {
+            color: #28a745;
+        }
+
+        .text-red {
+            color: #dc3545;
+        }
+
+        .text-cyan {
+            color: #17a2b8;
+        }
+
+        .text-gray {
+            color: #6c757d;
+        }
+
+        .text-yellow {
+            color: #ffc107;
+        }
+
+        .text-blue {
+            color: #007bff;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: #2a2a2a;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .results-table th {
+            background-color: #333;
+            color: #e0e0e0;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #444;
+        }
+
+        .results-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #444;
+            vertical-align: top;
+        }
+
+        .results-table tr:hover {
+            background-color: #333;
+        }
+
+        .url-cell {
+            max-width: 300px;
+            word-break: break-all;
+            font-size: 12px;
+        }
+
+        .index-cell {
+            text-align: center;
+            width: 50px;
+        }
+
+        .status-cell {
+            text-align: center;
+            width: 80px;
+        }
+
+        .failure-section {
+            margin: 30px 0;
+            background-color: #2a2a2a;
+            border-radius: 5px;
+            padding: 20px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .failure-header {
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .diff-content {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 3px;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .diff-line-add {
+            color: #28a745;
+        }
+
+        .diff-line-remove {
+            color: #dc3545;
+        }
+
+        .diff-line-context {
+            color: #17a2b8;
+        }
+
+        .truncated-notice {
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .no-failures {
+            text-align: center;
+            color: #28a745;
+            font-size: 18px;
+            margin: 40px 0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #6c757d;
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTTPS Menu Comparator Report</h1>
+
+        <div class="metadata">
+            <p><strong>Report Name:</strong> diy-782.txt-cookies.txt-2025-10-25T10-38-24</p>
+            <p><strong>Generated:</strong> 10/25/2025, 7:38:24 PM</p>
+            <p><strong>URLs File:</strong> diy-782.txt</p>
+            <p><strong>Cookies File:</strong> cookies.txt</p>
+            <p><strong>Total Comparisons:</strong> 60</p>
+        </div>
+
+        <div class="summary">
+            <span class="bg-red text-white"> SOME FAIL </span> <strong>Summary: 57 passed, 3 failed (total 60)</strong>
+        </div>
+
+        <h2>Results Overview</h2>
+        
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th class="index-cell">#</th>
+                <th class="url-cell">URL A</th>
+                <th class="url-cell">URL B</th>
+                <th class="status-cell">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+  
+            <tr>
+                <td class="index-cell">1</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/list.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/list.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">2</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/init.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/init.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">3</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/restoreresearchlist.do?initialize=true</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/restoreresearchlist.do?initialize=true</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">4</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?matter_id=5185378</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?matter_id=163146</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">5</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/input.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">6</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/edit.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/edit.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">7</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/pointEdit.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/pointEdit.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">8</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/pointgiven/view.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/pointgiven/view.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">9</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/edit.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/edit.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">10</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkCreateInit.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkCreateInit.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">11</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEdit.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEdit.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">12</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_edit.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_edit.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">13</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderlist/list.do?initialize=true&amp;research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderlist/list.do?initialize=true&amp;research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">14</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/input.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/input.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">15</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/input.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/input.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">16</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/edit.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/edit.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">17</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/view.do?enq_id=18706842</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/view.do?enq_id=2366982</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">18</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/panelEdit.do?enq_id=18706842&amp;research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/panelEdit.do?enq_id=2366982&amp;research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">19</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEditConfirm.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEditConfirm.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">20</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkCreate.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkCreate.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">21</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_confirm.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_confirm.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">22</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_save.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/exclusion_save.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">23</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_save.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/query/target_save.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-red text-white"> FAIL </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">24</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/confirm.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/confirm.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">25</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/complete.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/complete.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">26</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/registShow.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderregist/registShow.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">27</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/confirm.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/confirm.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">28</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/registShow.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/autoorder/registShow.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">29</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/confirm.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/confirm.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">30</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/show.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/show.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">31</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/complete.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/complete.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">32</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/finish.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/finish.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">33</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/duplicate_view.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/idupload/duplicate_view.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">34</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/view.do?request_id=25303760&amp;meaning=2</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/view.do?request_id=1306172&amp;meaning=2</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">35</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/add.do?request_id=25303760&amp;meaning=2</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/datafolder/add.do?request_id=1306172&amp;meaning=2</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">36</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/property_download_view.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/property_download_view.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">37</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download_view.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download_view.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">38</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/jissahelper/deli_or_ans_id_download.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">39</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies_view.do?matter_id=5185378</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies_view.do?matter_id=163146</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">40</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies.do?matter_id=5185378</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/projects/copies.do?matter_id=163146</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">41</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/cancel.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/cancel.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">42</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/show.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/show.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">43</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/unlink_update.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/survey/unlink_update.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">44</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/testQuotaGroupCreate.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/testQuotaGroupCreate.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">45</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEditBack.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEditBack.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">46</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEditComplete.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/bulkEditComplete.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">47</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/save.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/quotagroup/save.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">48</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/save.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/save.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">49</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/show.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/show.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">50</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/tag_create.do?research_id=25303908</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/tag_create.do?research_id=1306172</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">51</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/copy.do?matter_id=5185378</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/research/copy.do?matter_id=163146</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">52</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/view.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/view.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">53</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/edit.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/edit.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">54</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/apply.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/apply.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">55</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/apply_cancel.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/apply_cancel.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">56</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/approve.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/approve.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">57</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/approve_cancel.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/approve_cancel.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">58</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/confirm.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/confirm.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">59</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/regist.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/regist.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+            <tr>
+                <td class="index-cell">60</td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/reedit.do?order_id=255728</span></td>
+                <td class="url-cell"><span class="text-cyan">/sampling/orderedit/reedit.do?order_id=2126203</span></td>
+                <td class="status-cell"><span class="bg-green text-white"> PASS </span></td>
+            </tr>
+    
+        </tbody>
+    </table>
+  
+
+        <h2>Failure Details</h2>
+        <div class="no-failures">🎉 No failures to report - all comparisons passed!</div>
+
+        <div class="footer">
+            Generated by HTTPS Menu Comparator v1.0<br>
+            Report generated at 2025-10-25T10:38:24.646Z
+        </div>
+    </div>
+</body>
+</html>
