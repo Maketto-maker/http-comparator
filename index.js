@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const ora = require('ora');
@@ -73,6 +74,16 @@ function parseUrlPairs(text) {
 }
 
 async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+async function waitForUserInput(message = 'Press Enter to continue...') {
+  return new Promise(resolve => {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    rl.question(`${message}\n`, () => {
+      rl.close();
+      resolve();
+    });
+  });
+}
 
 (async function main() {
   const argv = yargs(hideBin(process.argv))
@@ -193,6 +204,8 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
   });
 
   const results = [];
+  const responsesA = new Array(urlPairs.length);
+  const responsesB = new Array(urlPairs.length);
 
   // Login check mode: test both URLs with their respective cookies
   if (argv['login-check']) {
@@ -489,152 +502,227 @@ async function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
     }
   }
 
+  if (urlPairs.length > 0) {
+    console.log(chalk.blue('\nFetching URL A for all pairs...'));
+  }
+
   for (let i = 0; i < urlPairs.length; i++) {
-    const [urlA, urlB] = urlPairs[i];
-    const pairLabel = `${requestTarget(urlA)}  vs  ${requestTarget(urlB)}`;
-    const step = ora(`Fetching [${i + 1}/${urlPairs.length}] ${pairLabel}`).start();
+    const [urlA] = urlPairs[i];
+    const refererA = argv['referer-a'] || argv['referer'] || '';
+    const step = ora(`Fetching URL A [${i + 1}/${urlPairs.length}] ${requestTarget(urlA)}`).start();
 
- 
     try {
-      const refererA = argv['referer-a'] || argv['referer'] || '';
-      const refererB = argv['referer-b'] || argv['referer'] || '';
-      const [resA, resB] = await Promise.all([
-        fetchHtml(urlA, {
-          cookieJar: cookieJars.A,
-          timeout: argv.timeout,
-          retries: argv.retries,
-          insecure: argv.insecure,
-          referer: refererA,
-          followTokenRefresh: argv['follow-token-refresh'],
-          username: credentials?.A?.username || '',
-          password: credentials?.A?.password || ''
-        }),
-        fetchHtml(urlB, {
-          cookieJar: cookieJars.B,
-          timeout: argv.timeout,
-          retries: argv.retries,
-          insecure: argv.insecure,
-          referer: refererB,
-          followTokenRefresh: argv['follow-token-refresh'],
-          username: credentials?.B?.username || '',
-          password: credentials?.B?.password || ''
-        })
-      ]);
+      const resA = await fetchHtml(urlA, {
+        cookieJar: cookieJars.A,
+        timeout: argv.timeout,
+        retries: argv.retries,
+        insecure: argv.insecure,
+        referer: refererA,
+        followTokenRefresh: argv['follow-token-refresh'],
+        username: credentials?.A?.username || '',
+        password: credentials?.A?.password || ''
+      });
 
-      if (!resA.ok) {
-        const aExtra = resA.statusCode === 0 && resA.error ? ` ${resA.error.code || ''} ${resA.error.message || ''}`.trim() : '';
-        step.fail(chalk.red(`A failed (${resA.statusCode}${aExtra ? ' ' + aExtra : ''})`));
-        results.push({ index: i + 1, urlA, urlB, pass: false, reason: `A HTTP ${resA.statusCode}${aExtra ? ' ' + aExtra : ''}`.trim(), diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-      } else if (!resB.ok) {
-        const bExtra = resB.statusCode === 0 && resB.error ? ` ${resB.error.code || ''} ${resB.error.message || ''}`.trim() : '';
-        step.fail(chalk.red(`B failed (${resB.statusCode}${bExtra ? ' ' + bExtra : ''})`));
-        results.push({ index: i + 1, urlA, urlB, pass: false, reason: `B HTTP ${resB.statusCode}${bExtra ? ' ' + bExtra : ''}`.trim(), diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
+      responsesA[i] = { res: resA, error: null };
+
+      if (resA.ok) {
+        step.succeed(chalk.green(`URL A OK (${resA.statusCode})`));
       } else {
-        const innerA = extractMenu(resA.body);
-        const innerB = extractMenu(resB.body);
-
-        if (innerA.missing || innerB.missing) {
-          const which = innerA.missing ? 'A' : 'B';
-
-          // If #dropmenu is missing and we have credentials, try to login and retry once
-          if (credentials && (credentials.A || credentials.B)) {
-            console.log(chalk.yellow(`#dropmenu missing in ${which}, attempting login retry...`));
-
-            try {
-              // Retry the failed URL with fresh authentication
-              const retryUrl = which === 'A' ? urlA : urlB;
-              const retryReferer = which === 'A' ? (argv['referer-a'] || argv['referer'] || '') : (argv['referer-b'] || argv['referer'] || '');
-              const retryCookieJar = which === 'A' ? cookieJars.A : cookieJars.B;
-              const retryCredentials = which === 'A' ? credentials.A : credentials.B;
-
-              const retryRes = await fetchHtml(retryUrl, {
-                cookieJar: retryCookieJar,
-                timeout: argv.timeout,
-                retries: argv.retries,
-                insecure: argv.insecure,
-                referer: retryReferer,
-                followTokenRefresh: argv['follow-token-refresh'],
-                username: retryCredentials?.username || '',
-                password: retryCredentials?.password || ''
-              });
-
-              if (retryRes.ok) {
-                const retryInner = extractMenu(retryRes.body);
-                if (!retryInner.missing) {
-                  console.log(chalk.green(`✓ Login retry successful for ${which}, #dropmenu found`));
-
-                  // Update the failed response with the successful retry
-                  if (which === 'A') {
-                    resA = retryRes;
-                    innerA = retryInner;
-                  } else {
-                    resB = retryRes;
-                    innerB = retryInner;
-                  }
-
-                  // Continue with normal comparison logic
-                  if (!innerA.missing && !innerB.missing) {
-                    const textsA = extractAnchorTexts(innerA.html);
-                    const textsB = extractAnchorTexts(innerB.html);
-                    const listA = textsA.join('\n');
-                    const listB = textsB.join('\n');
-                    const cmp = compareStrings(listA, listB);
-                    if (cmp.equal) {
-                      step.succeed(chalk.green('PASS (after retry)'));
-                      results.push({ index: i + 1, urlA, urlB, pass: true, reason: 'Identical anchors (after login retry)', diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-                    } else {
-                      step.fail(chalk.red('FAIL (after retry)'));
-                      const info = `Anchor counts: A=${textsA.length}, B=${textsB.length} (after login retry)`;
-                      results.push({ index: i + 1, urlA, urlB, pass: false, reason: info, diff: cmp.diff, oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-                    }
-                  } else {
-                    // Still missing after retry
-                    step.fail(chalk.red(`#dropmenu still missing in ${which} after retry`));
-                    results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which} (retry failed)`, diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-                  }
-                } else {
-                  console.log(chalk.red(`✗ Login retry failed for ${which}, #dropmenu still missing`));
-                  step.fail(chalk.red(`#dropmenu missing in ${which} (retry failed)`));
-                  results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which} (retry failed)`, diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred || retryRes.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred || retryRes.loginOccurred });
-                }
-              } else {
-                console.log(chalk.red(`✗ Login retry request failed for ${which}: HTTP ${retryRes.statusCode}`));
-                step.fail(chalk.red(`#dropmenu missing in ${which} (retry request failed)`));
-                results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which} (retry request failed)`, diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred || retryRes.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred || retryRes.loginOccurred });
-              }
-            } catch (retryError) {
-              console.log(chalk.red(`✗ Login retry error for ${which}: ${retryError.message}`));
-              step.fail(chalk.red(`#dropmenu missing in ${which} (retry error)`));
-              results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which} (retry error: ${retryError.message})`, diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-            }
-          } else {
-            // No credentials available for retry
-            step.fail(chalk.red(`#dropmenu missing in ${which}`));
-            results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which}`, diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-          }
-        } else {
-          const textsA = extractAnchorTexts(innerA.html);
-          const textsB = extractAnchorTexts(innerB.html);
-          const listA = textsA.join('\n');
-          const listB = textsB.join('\n');
-          const cmp = compareStrings(listA, listB);
-          if (cmp.equal) {
-            step.succeed(chalk.green('PASS'));
-            results.push({ index: i + 1, urlA, urlB, pass: true, reason: 'Identical anchors', diff: '', oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-          } else {
-            step.fail(chalk.red('FAIL'));
-            const info = `Anchor counts: A=${textsA.length}, B=${textsB.length}`;
-            results.push({ index: i + 1, urlA, urlB, pass: false, reason: info, diff: cmp.diff, oAuth2FlowOccurred: resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred, loginOccurred: resA.loginOccurred || resB.loginOccurred });
-          }
-        }
+        const aExtra = resA.statusCode === 0 && resA.error ? ` ${resA.error.code || ''} ${resA.error.message || ''}`.trim() : '';
+        step.fail(chalk.red(`URL A failed (${resA.statusCode}${aExtra ? ' ' + aExtra : ''})`));
       }
-    } catch (e) {
-      step.fail(chalk.red(`Error: ${e.message}`));
-      results.push({ index: i + 1, urlA, urlB, pass: false, reason: e.message, diff: '', oAuth2FlowOccurred: e.oAuth2FlowOccurred || false, loginOccurred: e.loginOccurred || false });
+    } catch (err) {
+      responsesA[i] = { res: null, error: err };
+      step.fail(chalk.red(`URL A error (${err.message})`));
     }
 
     if (i < urlPairs.length - 1) {
       await delay(argv.delay);
+    }
+  }
+
+  if (urlPairs.length > 0) {
+    await waitForUserInput('All URL A fetched. Press Enter to fetch URL B...');
+    console.log(chalk.blue('\nFetching URL B for all pairs...'));
+  }
+
+  for (let i = 0; i < urlPairs.length; i++) {
+    const [, urlB] = urlPairs[i];
+    const refererB = argv['referer-b'] || argv['referer'] || '';
+    const step = ora(`Fetching URL B [${i + 1}/${urlPairs.length}] ${requestTarget(urlB)}`).start();
+
+    try {
+      const resB = await fetchHtml(urlB, {
+        cookieJar: cookieJars.B,
+        timeout: argv.timeout,
+        retries: argv.retries,
+        insecure: argv.insecure,
+        referer: refererB,
+        followTokenRefresh: argv['follow-token-refresh'],
+        username: credentials?.B?.username || '',
+        password: credentials?.B?.password || ''
+      });
+
+      responsesB[i] = { res: resB, error: null };
+
+      if (resB.ok) {
+        step.succeed(chalk.green(`URL B OK (${resB.statusCode})`));
+      } else {
+        const bExtra = resB.statusCode === 0 && resB.error ? ` ${resB.error.code || ''} ${resB.error.message || ''}`.trim() : '';
+        step.fail(chalk.red(`URL B failed (${resB.statusCode}${bExtra ? ' ' + bExtra : ''})`));
+      }
+    } catch (err) {
+      responsesB[i] = { res: null, error: err };
+      step.fail(chalk.red(`URL B error (${err.message})`));
+    }
+
+    if (i < urlPairs.length - 1) {
+      await delay(argv.delay);
+    }
+  }
+
+  for (let i = 0; i < urlPairs.length; i++) {
+    const [urlA, urlB] = urlPairs[i];
+    const pairLabel = `${requestTarget(urlA)}  vs  ${requestTarget(urlB)}`;
+    const step = ora(`Comparing [${i + 1}/${urlPairs.length}] ${pairLabel}`).start();
+
+    const infoA = responsesA[i] || { res: null, error: new Error('URL A did not run') };
+    const infoB = responsesB[i] || { res: null, error: new Error('URL B did not run') };
+
+    let resA = infoA.res;
+    let resB = infoB.res;
+
+    const baseOAuth2 = Boolean(resA?.oAuth2FlowOccurred || resB?.oAuth2FlowOccurred);
+    const baseLoginOccurred = Boolean(resA?.loginOccurred || resB?.loginOccurred);
+
+    if (!resA) {
+      const msg = infoA.error ? infoA.error.message : 'Unknown error fetching URL A';
+      step.fail(chalk.red(`A error (${msg})`));
+      const combinedOAuth2 = Boolean(infoA.res?.oAuth2FlowOccurred || infoB.res?.oAuth2FlowOccurred);
+      const combinedLoginOccurred = Boolean(infoA.res?.loginOccurred || infoB.res?.loginOccurred);
+      results.push({ index: i + 1, urlA, urlB, pass: false, reason: `A error: ${msg}`, diff: '', oAuth2FlowOccurred: combinedOAuth2, loginOccurred: combinedLoginOccurred });
+      continue;
+    }
+
+    if (!resB) {
+      const msg = infoB.error ? infoB.error.message : 'Unknown error fetching URL B';
+      step.fail(chalk.red(`B error (${msg})`));
+      const combinedOAuth2 = Boolean(infoA.res?.oAuth2FlowOccurred || infoB.res?.oAuth2FlowOccurred);
+      const combinedLoginOccurred = Boolean(infoA.res?.loginOccurred || infoB.res?.loginOccurred);
+      results.push({ index: i + 1, urlA, urlB, pass: false, reason: `B error: ${msg}`, diff: '', oAuth2FlowOccurred: combinedOAuth2, loginOccurred: combinedLoginOccurred });
+      continue;
+    }
+
+    if (!resA.ok) {
+      const aExtra = resA.statusCode === 0 && resA.error ? ` ${resA.error.code || ''} ${resA.error.message || ''}`.trim() : '';
+      step.fail(chalk.red(`A failed (${resA.statusCode}${aExtra ? ' ' + aExtra : ''})`));
+      const combinedOAuth2 = Boolean(resA.oAuth2FlowOccurred || resB?.oAuth2FlowOccurred);
+      const combinedLoginOccurred = Boolean(resA.loginOccurred || resB?.loginOccurred);
+      results.push({ index: i + 1, urlA, urlB, pass: false, reason: `A HTTP ${resA.statusCode}${aExtra ? ' ' + aExtra : ''}`.trim(), diff: '', oAuth2FlowOccurred: combinedOAuth2, loginOccurred: combinedLoginOccurred });
+      continue;
+    }
+
+    if (!resB.ok) {
+      const bExtra = resB.statusCode === 0 && resB.error ? ` ${resB.error.code || ''} ${resB.error.message || ''}`.trim() : '';
+      step.fail(chalk.red(`B failed (${resB.statusCode}${bExtra ? ' ' + bExtra : ''})`));
+      const combinedOAuth2 = Boolean(resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred);
+      const combinedLoginOccurred = Boolean(resA.loginOccurred || resB.loginOccurred);
+      results.push({ index: i + 1, urlA, urlB, pass: false, reason: `B HTTP ${resB.statusCode}${bExtra ? ' ' + bExtra : ''}`.trim(), diff: '', oAuth2FlowOccurred: combinedOAuth2, loginOccurred: combinedLoginOccurred });
+      continue;
+    }
+
+    let innerA = extractMenu(resA.body);
+    let innerB = extractMenu(resB.body);
+
+    if (innerA.missing || innerB.missing) {
+      const which = innerA.missing ? 'A' : 'B';
+
+      if (credentials && (credentials.A || credentials.B)) {
+        console.log(chalk.yellow(`#dropmenu missing in ${which}, attempting login retry...`));
+
+        try {
+          const retryUrl = which === 'A' ? urlA : urlB;
+          const retryReferer = which === 'A' ? (argv['referer-a'] || argv['referer'] || '') : (argv['referer-b'] || argv['referer'] || '');
+          const retryCookieJar = which === 'A' ? cookieJars.A : cookieJars.B;
+          const retryCredentials = which === 'A' ? credentials.A : credentials.B;
+
+          const retryRes = await fetchHtml(retryUrl, {
+            cookieJar: retryCookieJar,
+            timeout: argv.timeout,
+            retries: argv.retries,
+            insecure: argv.insecure,
+            referer: retryReferer,
+            followTokenRefresh: argv['follow-token-refresh'],
+            username: retryCredentials?.username || '',
+            password: retryCredentials?.password || ''
+          });
+
+          if (retryRes.ok) {
+            const retryInner = extractMenu(retryRes.body);
+            if (!retryInner.missing) {
+              console.log(chalk.green(`✓ Login retry successful for ${which}, #dropmenu found`));
+
+              if (which === 'A') {
+                resA = retryRes;
+                innerA = retryInner;
+                responsesA[i] = { res: retryRes, error: null };
+              } else {
+                resB = retryRes;
+                innerB = retryInner;
+                responsesB[i] = { res: retryRes, error: null };
+              }
+
+              const textsA = extractAnchorTexts(innerA.html);
+              const textsB = extractAnchorTexts(innerB.html);
+              const listA = textsA.join('\n');
+              const listB = textsB.join('\n');
+              const cmp = compareStrings(listA, listB);
+              if (cmp.equal) {
+                step.succeed(chalk.green('PASS (after retry)'));
+                results.push({ index: i + 1, urlA, urlB, pass: true, reason: 'Identical anchors (after login retry)', diff: '', oAuth2FlowOccurred: Boolean(resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred || retryRes.oAuth2FlowOccurred), loginOccurred: Boolean(resA.loginOccurred || resB.loginOccurred || retryRes.loginOccurred) });
+              } else {
+                step.fail(chalk.red('FAIL (after retry)'));
+                const info = `Anchor counts: A=${textsA.length}, B=${textsB.length} (after login retry)`;
+                results.push({ index: i + 1, urlA, urlB, pass: false, reason: info, diff: cmp.diff, oAuth2FlowOccurred: Boolean(resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred || retryRes.oAuth2FlowOccurred), loginOccurred: Boolean(resA.loginOccurred || resB.loginOccurred || retryRes.loginOccurred) });
+              }
+            } else {
+              console.log(chalk.red(`✗ Login retry failed for ${which}, #dropmenu still missing`));
+              step.fail(chalk.red(`#dropmenu missing in ${which} (retry failed)`));
+              results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which} (retry failed)`, diff: '', oAuth2FlowOccurred: Boolean(resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred || retryRes.oAuth2FlowOccurred), loginOccurred: Boolean(resA.loginOccurred || resB.loginOccurred || retryRes.loginOccurred) });
+            }
+          } else {
+            console.log(chalk.red(`✗ Login retry request failed for ${which}: HTTP ${retryRes.statusCode}`));
+            step.fail(chalk.red(`#dropmenu missing in ${which} (retry request failed)`));
+            results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which} (retry request failed)`, diff: '', oAuth2FlowOccurred: Boolean(resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred || retryRes.oAuth2FlowOccurred), loginOccurred: Boolean(resA.loginOccurred || resB.loginOccurred || retryRes.loginOccurred) });
+          }
+        } catch (retryError) {
+          console.log(chalk.red(`✗ Login retry error for ${which}: ${retryError.message}`));
+          step.fail(chalk.red(`#dropmenu missing in ${which} (retry error)`));
+          results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which} (retry error: ${retryError.message})`, diff: '', oAuth2FlowOccurred: baseOAuth2, loginOccurred: baseLoginOccurred });
+        }
+      } else {
+        step.fail(chalk.red(`#dropmenu missing in ${which}`));
+        results.push({ index: i + 1, urlA, urlB, pass: false, reason: `#dropmenu missing in ${which}`, diff: '', oAuth2FlowOccurred: baseOAuth2, loginOccurred: baseLoginOccurred });
+      }
+
+      continue;
+    }
+
+    const textsA = extractAnchorTexts(innerA.html);
+    const textsB = extractAnchorTexts(innerB.html);
+    const listA = textsA.join('\n');
+    const listB = textsB.join('\n');
+    const cmp = compareStrings(listA, listB);
+    const finalOAuth2 = Boolean(resA.oAuth2FlowOccurred || resB.oAuth2FlowOccurred);
+    const finalLoginOccurred = Boolean(resA.loginOccurred || resB.loginOccurred);
+
+    if (cmp.equal) {
+      step.succeed(chalk.green('PASS'));
+      results.push({ index: i + 1, urlA, urlB, pass: true, reason: 'Identical anchors', diff: '', oAuth2FlowOccurred: finalOAuth2, loginOccurred: finalLoginOccurred });
+    } else {
+      step.fail(chalk.red('FAIL'));
+      const info = `Anchor counts: A=${textsA.length}, B=${textsB.length}`;
+      results.push({ index: i + 1, urlA, urlB, pass: false, reason: info, diff: cmp.diff, oAuth2FlowOccurred: finalOAuth2, loginOccurred: finalLoginOccurred });
     }
   }
 
